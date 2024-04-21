@@ -6,6 +6,7 @@ use crate::config::DATABASE_URL;
 
 mod user;
 use user::api;
+mod db;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
