@@ -11,6 +11,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
         .service(api::web_status)
+        .service(api::web_login)
     })
         .bind(SERVER_URL)?
         .run()
