@@ -1,11 +1,13 @@
 use actix_web::{middleware, web, App, HttpServer};
-use std::io;
 
 mod config;
-use config::SERVER_URL;
+use crate::config::SERVER_URL;
+use crate::config::DATABASE_URL;
 
 #[actix_web::main]
-async fn main() -> io::Result<()> {
+async fn main() -> std::io::Result<()> {
+    //链接数据库
+    let pool = sqlx::MySqlPool::connect(DATABASE_URL).await.unwrap();
     HttpServer::new(move || {
         App::new()
     })
