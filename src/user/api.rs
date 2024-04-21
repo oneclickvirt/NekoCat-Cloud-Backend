@@ -1,8 +1,7 @@
 use actix_web::{web, HttpRequest, Responder, HttpResponse, get, post};
 use serde::Deserialize;
 use serde_json::json;
-use crate::user::login;
-use crate::user::register;
+use crate::user::{login, register, announcement};
 
 #[derive(Deserialize)]
 pub struct LoginForm {
