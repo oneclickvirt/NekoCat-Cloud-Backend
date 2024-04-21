@@ -2,6 +2,7 @@ use sqlx::Row;
 use sqlx::mysql::MySqlPoolOptions;
 use crate::config::DATABASE_URL;
 
+#[tokio::main]
 pub async fn get_announcement() -> Result<String, sqlx::Error> {
     let pool = MySqlPoolOptions::new().connect(DATABASE_URL).await?;
     

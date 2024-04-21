@@ -1,6 +1,6 @@
 use sqlx::mysql::MySqlPoolOptions;
 use crate::config::DATABASE_URL;
-use rand::{thread_rng, Rng};
+use rand::Rng;
 use rand::distributions::Alphanumeric;
 use std::string::String;
 

@@ -13,6 +13,7 @@ async fn main() -> std::io::Result<()> {
         .service(api::web_status)
         .service(api::web_login)
         .service(api::web_register)
+        .service(api::web_announcement)
     })
         .bind(SERVER_URL)?
         .run()

@@ -1,7 +1,7 @@
 use actix_web::{web, HttpRequest, Responder, HttpResponse, get, post};
 use serde::Deserialize;
 use serde_json::json;
-use crate::user::{login, register, announcement};
+use crate::user::{login, register, announcement, cart};
 
 #[derive(Deserialize)]
 pub struct LoginForm {
@@ -14,6 +14,11 @@ pub struct RegisterFrom {
     pub username: String,
     pub password: String,
     pub email: String,
+}
+
+#[derive(Deserialize)]
+pub struct CartFrom {
+    pub group_id: String,
 }
 
 #[get("/status")]
@@ -74,6 +79,29 @@ pub async fn web_register(form: web::Query<RegisterFrom>) -> impl Responder {
             HttpResponse::Ok().json(json!({
                 "status": "error",
                 "message": "Register failed"
+            }))
+        }
+    }
+}
+
+#[get("/announcement")]
+pub async fn web_announcement() -> impl Responder {
+    // 获取公告
+    let announcement = announcement::get_announcement();
+    
+    // 返回成功响应
+    match announcement {
+        Ok(announcement) => {
+            HttpResponse::Ok().json(json!({
+                "status": "success",
+                "message": "Get announcement success",
+                "announcement": announcement
+            }))
+        },
+        Err(_) => {
+            HttpResponse::Ok().json(json!({
+                "status": "error",
+                "message": "Get announcement failed"
             }))
         }
     }
