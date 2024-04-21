@@ -1,4 +1,4 @@
-use actix_web::{web, HttpRequest, Responder, HttpResponse, get};
+use actix_web::{web, HttpRequest, Responder, HttpResponse, get, post};
 use serde::Deserialize;
 use serde_json::json;
 use crate::user::login;
@@ -27,13 +27,12 @@ pub async fn web_status() -> impl Responder {
 }
 
 
-#[get("/api/user/login")]
+#[post("/api/user/login")]
 pub async fn web_login(form: web::Query<LoginForm>) -> impl Responder {
     // 获取表单数据
     let username = &form.username;
     let password = &form.password;
     
-    // 调用登录函数
     let token = login::user_login_get_token(username, password);
     
     // 返回成功响应
@@ -54,7 +53,7 @@ pub async fn web_login(form: web::Query<LoginForm>) -> impl Responder {
     }
 }
 
-#[get("/api/user/register")]
+#[post("/api/user/register")]
 pub async fn web_register(form: web::Query<RegisterFrom>) -> impl Responder {
     // 获取表单数据
     let username = &form.username;
