@@ -2,11 +2,9 @@ use actix_web::{middleware, web, App, HttpServer};
 
 mod config;
 use crate::config::SERVER_URL;
-use crate::config::DATABASE_URL;
 
 mod user;
 use user::api;
-mod db;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
