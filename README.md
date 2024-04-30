@@ -5,15 +5,15 @@
 
 ## Todo
 
-- [ ] 用户登录API
+- [x] 用户登录API
 
-- [ ] 用户注册API
+- [x] 用户注册API
 
 - [ ] 服务器开通API
 
 - [ ] 用户购买API
 
-- [ ] 公告API
+- [x] 公告API
 
 - [ ] Proxmox VE插件API
 
