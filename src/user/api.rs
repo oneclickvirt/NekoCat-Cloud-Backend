@@ -1,4 +1,4 @@
-use actix_web::{dev::ResourcePath, get, post, web, HttpRequest, HttpResponse, Responder};
+use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
 use serde::Deserialize;
 use serde_json::json;
 use crate::user::{login, register, announcement, cart};
@@ -17,7 +17,7 @@ pub struct RegisterFrom {
 
 #[derive(Deserialize)]
 pub struct CartFrom {
-    pub group_id: String,
+    pub group_id: i32,
 }
 
 #[get("/status")]
@@ -101,6 +101,30 @@ pub async fn web_announcement() -> impl Responder {
             HttpResponse::Ok().json(json!({
                 "status": "error",
                 "message": "Get announcement failed"
+            }))
+        }
+    }
+}
+
+#[get("/api/cart")]
+pub async fn web_cart(form: web::Form<CartFrom>) -> impl Responder {
+
+    let group_id: i32 = form.group_id;
+    let cart_result = cart::get_cart(group_id).await;  // 确保异步调用被正确处理
+
+    match cart_result {
+        Ok(cart) => {
+            HttpResponse::Ok().json(json!({
+                "status": "success",
+                "message": "Get cart success",
+                "cart": cart
+            }))
+        },
+        Err(e) => {
+            HttpResponse::Ok().json(json!({
+                "status": "error",
+                "message": "Get cart failed",
+                "debug": e.to_string()
             }))
         }
     }
