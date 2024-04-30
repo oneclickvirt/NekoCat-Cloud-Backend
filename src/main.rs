@@ -4,6 +4,8 @@ use dotenv::dotenv;
 
 mod user;
 use user::api;
+mod admin;
+use admin::admin_api;
 mod models;
 
 #[actix_web::main]
@@ -17,6 +19,8 @@ async fn main() -> std::io::Result<()> {
         .service(api::web_register)
         .service(api::web_announcement)
         .service(api::get_ip)
+        .service(admin_api::web_login)
+        .service(admin_api::get_user_list)
     })
         .bind(server_url)?
         .run()
