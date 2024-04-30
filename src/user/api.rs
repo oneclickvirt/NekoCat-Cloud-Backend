@@ -38,23 +38,12 @@ pub async fn web_login(form: web::Query<LoginForm>) -> impl Responder {
     let password = &form.password;
     
     let token = login::user_login_get_token(username, password);
-    
-    // 返回成功响应
-    match token {
-        Ok(token) => {
-            HttpResponse::Ok().json(json!({
-                "status": "success",
-                "message": "Login success",
-                "token": token
-            }))
-        },
-        Err(_) => {
-            HttpResponse::Ok().json(json!({
-                "status": "error",
-                "message": "Login failed"
-            }))
-        }
-    }
+
+        HttpResponse::Ok().json(json!({
+            "status": "success",
+            "message": "Login success",
+            "token": token
+        }))
 }
 
 #[post("/api/user/register")]

@@ -1,5 +1,6 @@
 use sqlx::mysql::MySqlPoolOptions;
-use crate::config::DATABASE_URL;
+use std::env;
+use dotenv::dotenv;
 use rand::Rng;
 use rand::distributions::Alphanumeric;
 use std::string::String;
@@ -15,7 +16,9 @@ fn generate_random_string(length: usize) -> String {
 
 #[tokio::main]
 pub async fn register_user(username: &str, password: &str, email: &str) -> Result<String, sqlx::Error> {
-    let pool = MySqlPoolOptions::new().connect(DATABASE_URL).await?;
+    dotenv().ok();
+    let DATABASE_URL = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = MySqlPoolOptions::new().connect(&DATABASE_URL).await?;
     
     let token = generate_random_string(32);
     

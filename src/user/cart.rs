@@ -1,10 +1,13 @@
 use sqlx::Row;
 use sqlx::mysql::MySqlPoolOptions;
-use crate::config::DATABASE_URL;
+use std::env;
+use dotenv::dotenv;
 
 #[tokio::main]
 pub async fn get_cart(group_id: i32) -> Result<String, sqlx::Error> {
-    let pool = MySqlPoolOptions::new().connect(DATABASE_URL).await?;
+    dotenv().ok();
+    let DATABASE_URL = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = MySqlPoolOptions::new().connect(&DATABASE_URL).await?;
     
     let row = sqlx::query("SELECT * FROM cart WHERE group_id = ?")
         .bind(group_id)
