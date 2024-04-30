@@ -1,8 +1,7 @@
-use actix_web::{web, HttpRequest, Responder, HttpResponse, get, post};
+use actix_web::{web, Responder, HttpResponse, get, post};
 use serde::Deserialize;
 use serde_json::json;
 use crate::user::{login, register, announcement, cart};
-
 #[derive(Deserialize)]
 pub struct LoginForm {
     pub username: String,
@@ -30,30 +29,39 @@ pub async fn web_status() -> impl Responder {
     }))
 }
 
-
 #[post("/api/user/login")]
-pub async fn web_login(form: web::Query<LoginForm>) -> impl Responder {
+pub async fn web_login(form: web::Form<LoginForm>) -> impl Responder {
     // 获取表单数据
     let username = &form.username;
     let password = &form.password;
     
-    let token = login::user_login_get_token(username, password);
-
-        HttpResponse::Ok().json(json!({
-            "status": "success",
-            "message": "Login success",
-            "token": token
-        }))
+    let user_token = login::user_login_get_token(&username, &password).await;
+    // 返回成功响应
+    match user_token {
+        Ok(user_token) => {
+            HttpResponse::Ok().json(json!({
+                "status": "success",
+                "message": "Login success",
+                "token": user_token.token
+            }))
+        },
+        Err(_) => {
+            HttpResponse::Ok().json(json!({
+                "status": "error",
+                "message": "Login failed"
+            }))
+        }
+    }
 }
 
 #[post("/api/user/register")]
-pub async fn web_register(form: web::Query<RegisterFrom>) -> impl Responder {
+pub async fn web_register(form: web::Form<RegisterFrom>) -> impl Responder {
     // 获取表单数据
     let username = &form.username;
     let password = &form.password;
     let email = &form.email;
     
-    let token = register::register_user(username, password, email);
+    let token = register::register_user(username, password, email).await;
     
     // 返回成功响应
     match token {
@@ -75,11 +83,9 @@ pub async fn web_register(form: web::Query<RegisterFrom>) -> impl Responder {
 
 #[get("/announcement")]
 pub async fn web_announcement() -> impl Responder {
-    // 获取公告
-    let announcement = announcement::get_announcement();
-    
-    // 返回成功响应
-    match announcement {
+    let announcement_result = announcement::get_announcement().await;  // 确保异步调用被正确处理
+
+    match announcement_result {
         Ok(announcement) => {
             HttpResponse::Ok().json(json!({
                 "status": "success",

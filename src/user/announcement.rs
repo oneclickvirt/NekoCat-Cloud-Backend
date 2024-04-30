@@ -1,19 +1,16 @@
-use sqlx::Row;
+use actix_web::Result;
+use sqlx::Error;
 use sqlx::mysql::MySqlPoolOptions;
 use std::env;
 use dotenv::dotenv;
-use tokio; // Add tokio crate
+use crate::models::Announcement;
 
-#[tokio::main]
-pub async fn get_announcement() -> Result<String, sqlx::Error> {
+pub async fn get_announcement() -> Result<Announcement, Error> {
     dotenv().ok();
-    let DATABASE_URL = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = MySqlPoolOptions::new().connect(&DATABASE_URL).await?;
-    
-    let row = sqlx::query("SELECT * FROM announcement")
-        .fetch_one(&pool).await?;
-    
-    // 从数据库返回公告
-    let announcement: String = row.try_get("content")?;
-    Ok(announcement)
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = MySqlPoolOptions::new().connect(&database_url).await?;
+
+    sqlx::query_as::<_, Announcement>("SELECT * FROM announcements ORDER BY created_time DESC LIMIT 1")
+        .fetch_one(&pool)
+        .await
 }

@@ -14,11 +14,10 @@ fn generate_random_string(length: usize) -> String {
     s
 }
 
-#[tokio::main]
 pub async fn register_user(username: &str, password: &str, email: &str) -> Result<String, sqlx::Error> {
     dotenv().ok();
-    let DATABASE_URL = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = MySqlPoolOptions::new().connect(&DATABASE_URL).await?;
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = MySqlPoolOptions::new().connect(&database_url).await?;
     
     let token = generate_random_string(32);
     
