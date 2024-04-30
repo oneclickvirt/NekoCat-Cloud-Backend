@@ -1,4 +1,4 @@
-use actix_web::{web, Responder, HttpResponse, get, post};
+use actix_web::{dev::ResourcePath, get, post, web, HttpRequest, HttpResponse, Responder};
 use serde::Deserialize;
 use serde_json::json;
 use crate::user::{login, register, announcement, cart};
@@ -34,7 +34,8 @@ pub async fn web_login(form: web::Form<LoginForm>) -> impl Responder {
     // 获取表单数据
     let username = &form.username;
     let password = &form.password;
-    
+
+
     let user_token = login::user_login_get_token(&username, &password).await;
     // 返回成功响应
     match user_token {
@@ -55,13 +56,15 @@ pub async fn web_login(form: web::Form<LoginForm>) -> impl Responder {
 }
 
 #[post("/api/user/register")]
-pub async fn web_register(form: web::Form<RegisterFrom>) -> impl Responder {
+pub async fn web_register(form: web::Form<RegisterFrom>, req: HttpRequest) -> impl Responder {
     // 获取表单数据
     let username = &form.username;
     let password = &form.password;
     let email = &form.email;
-    
-    let token = register::register_user(username, password, email).await;
+    let connection_info = req.connection_info();
+    let ip = connection_info.realip_remote_addr().unwrap_or("127.0.0.1");
+
+    let token = register::register_user(username, password, email, ip).await;
     
     // 返回成功响应
     match token {
@@ -72,16 +75,17 @@ pub async fn web_register(form: web::Form<RegisterFrom>) -> impl Responder {
                 "token": token
             }))
         },
-        Err(_) => {
+        Err(e) => {
             HttpResponse::Ok().json(json!({
                 "status": "error",
-                "message": "Register failed"
+                "message": "Register failed",
+                "info": e.to_string()
             }))
         }
     }
 }
 
-#[get("/announcement")]
+#[get("/api/announcement")]
 pub async fn web_announcement() -> impl Responder {
     let announcement_result = announcement::get_announcement().await;  // 确保异步调用被正确处理
 
@@ -97,6 +101,27 @@ pub async fn web_announcement() -> impl Responder {
             HttpResponse::Ok().json(json!({
                 "status": "error",
                 "message": "Get announcement failed"
+            }))
+        }
+    }
+}
+
+#[get("/api/tool/ip")]
+pub async fn get_ip(req: HttpRequest) -> impl Responder {
+    let ip: String = req.connection_info().realip_remote_addr().unwrap_or("Unknown").to_string();
+
+    match ip.as_str() {
+        "Unknown" => {
+            HttpResponse::Ok().json(json!({
+                "status": "error",
+                "message": "Get IP failed"
+            }))
+        },
+        _ => {
+            HttpResponse::Ok().json(json!({
+                "status": "success",
+                "message": "Get IP success",
+                "ip": ip
             }))
         }
     }
