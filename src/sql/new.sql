@@ -20,6 +20,11 @@ CREATE TABLE server (
   `type` VARCHAR(255) NOT NULL,
   `max_limit` INT NOT NULL DEFAULT 0,
   `group` INT NOT NULL DEFAULT 0,
+  `storage` VARCHAR(255) NOT NULL,
+  `node_name` VARCHAR(255) NOT NULL,
+  `network_name` VARCHAR(255) NOT NULL,
+  `is_nat` INT NOT NULL DEFAULT 0,
+  `nat_ip` VARCHAR(255) NOT NULL,
   `status` INT NOT NULL DEFAULT 0,
   `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
