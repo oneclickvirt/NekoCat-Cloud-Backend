@@ -21,9 +21,19 @@ pub async fn create_server(group_id: i32, cart_id: i32) -> Result<(), sqlx::Erro
 
 
     if choose_server.r#type == "1" {
-
+        proxmox::create::pve_create_kvm(
+            &choose_server.ip,
+            &choose_server.port.to_string(),
+            &choose_server.key,
+            &choose_server.storage,
+            &choose_server.node_name,
+            &choose_server.network_name,
+            "local:vztmpl/debian-10-standard_10.10-1_amd64.tar.gz",
+            "test",
+            "test",
+        ).await?;
     }
-
+Ok(())
 }
 
 // CREATE TABLE server (

@@ -61,9 +61,16 @@ pub struct ServerInfo {
     pub name: String,
     pub ip: String,
     pub port: i32,
+    pub key: String,
     pub r#type: String,
     pub max_limit: i32,
     pub group: i32,
+    pub storage: String,
+    pub node_name: String,
+    pub network_name: String,
+    pub vm_technology: i32,
+    pub is_nat: i32,
+    pub nat_ip: String,
     pub status: i32,
     pub created_time: NaiveDateTime,
 }
@@ -72,9 +79,16 @@ pub struct ServerInfo {
 //     `name` VARCHAR(255) NOT NULL,
 //     `ip` VARCHAR(255) NOT NULL,
 //     `port` INT NOT NULL DEFAULT 0,
+//     `key` VARCHAR(255) NOT NULL,
 //     `type` VARCHAR(255) NOT NULL,
 //     `max_limit` INT NOT NULL DEFAULT 0,
 //     `group` INT NOT NULL DEFAULT 0,
+//     `storage` VARCHAR(255) NOT NULL,
+//     `node_name` VARCHAR(255) NOT NULL,
+//     `network_name` VARCHAR(255) NOT NULL,
+//     `vm_technology` INT NOT NULL DEFAULT 0, /*1: KVM 2: LXC*/
+//     `is_nat` INT NOT NULL DEFAULT 0,
+//     `nat_ip` VARCHAR(255) NOT NULL,
 //     `status` INT NOT NULL DEFAULT 0,
 //     `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 //   );
