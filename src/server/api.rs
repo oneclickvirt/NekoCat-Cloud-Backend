@@ -3,11 +3,12 @@ use serde::Deserialize;
 use serde_json::json;
 
 #[derive(Deserialize)]
-pub struct CreateServer {
+pub struct CreateKVMServer {
     pub token: String,
+    pub server_id: i32,
 }
 
-#[post("/api/server/create")]
-pub async fn web_login(form: web::Form<CreateServer>) -> impl Responder {
+#[post("/api/server/kvm/create")]
+pub async fn create_server_kvm(form: web::Form<CreateKVMServer>) -> impl Responder {
 
 }

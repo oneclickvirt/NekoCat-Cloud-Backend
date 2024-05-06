@@ -11,7 +11,7 @@ struct VmConfig {
     storage: String,
 }
 
-pub async fn pve_create_kvm(ip: &str, post: &str, key: &str, storage: &str, node_name: &str, _network_name: &str, template: &str, hostname: &str, password: &str) -> Result<(), Box<dyn Error>> {
+pub async fn pve_create_kvm(ip: &str, post: &str, _key: &str, storage: &str, node_name: &str, _network_name: &str, template: &str, hostname: &str, password: &str) -> Result<(), Box<dyn Error>> {
     let api_token = ""; //root@pam!tokenid=tokensecret
     let base_url = format!("https://{}:{}/api2/json", ip, post);
 
