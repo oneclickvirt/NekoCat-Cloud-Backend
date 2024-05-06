@@ -1,7 +1,7 @@
 use sqlx::FromRow;
 use serde::{Deserialize, Serialize};
 use chrono::NaiveDateTime;
-
+use bigdecimal::BigDecimal;
 #[derive(FromRow, Deserialize, Serialize, Debug, Clone)]
 pub struct UserInfo {
     pub id: i32,
@@ -46,14 +46,6 @@ pub struct Announcement {
     pub display_portal: i32,
     pub created_time: NaiveDateTime,
 }
-// CREATE TABLE announcement (
-//     `id` INT PRIMARY KEY AUTO_INCREMENT,
-//     `type` INT NOT NULL DEFAULT 0, /*1: Normal 2: Emergency*/
-//     `announcement_title` VARCHAR(255) NOT NULL,
-//     `announcement_body` VARCHAR(255) NOT NULL,
-//     `display_portal` INT NOT NULL DEFAULT 0,
-//     `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-//   );
 
 #[derive(FromRow, Serialize, Deserialize, Debug, Clone)]
 pub struct ServerInfo {
@@ -74,21 +66,15 @@ pub struct ServerInfo {
     pub status: i32,
     pub created_time: NaiveDateTime,
 }
-// CREATE TABLE server (
-//     `id` INT PRIMARY KEY AUTO_INCREMENT,
-//     `name` VARCHAR(255) NOT NULL,
-//     `ip` VARCHAR(255) NOT NULL,
-//     `port` INT NOT NULL DEFAULT 0,
-//     `key` VARCHAR(255) NOT NULL,
-//     `type` VARCHAR(255) NOT NULL,
-//     `max_limit` INT NOT NULL DEFAULT 0,
-//     `group` INT NOT NULL DEFAULT 0,
-//     `storage` VARCHAR(255) NOT NULL,
-//     `node_name` VARCHAR(255) NOT NULL,
-//     `network_name` VARCHAR(255) NOT NULL,
-//     `vm_technology` INT NOT NULL DEFAULT 0, /*1: KVM 2: LXC*/
-//     `is_nat` INT NOT NULL DEFAULT 0,
-//     `nat_ip` VARCHAR(255) NOT NULL,
-//     `status` INT NOT NULL DEFAULT 0,
-//     `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-//   );
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct CartInfo {
+    pub id: i32,
+    pub group_id: i32,
+    pub cart_title: String,
+    pub cart_body: String,
+    pub money: BigDecimal,
+    pub stock: i32,
+    pub allow_payment: String,
+    pub created_time: NaiveDateTime,
+}

@@ -1,22 +1,27 @@
-use sqlx::Row;
 use sqlx::mysql::MySqlPoolOptions;
 use std::env;
 use dotenv::dotenv;
+use crate::models::CartInfo;
+use bigdecimal::BigDecimal;
+use std::str::FromStr;
 
-pub async fn get_cart(group_id: i32) -> Result<String, sqlx::Error> {
+pub async fn get_cart(group_id: i32) -> Result<CartInfo, sqlx::Error> {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = MySqlPoolOptions::new().connect(&database_url).await?;
+    let pool: sqlx::Pool<sqlx::MySql> = MySqlPoolOptions::new().connect(&database_url).await?;
     
-    let row = sqlx::query("SELECT * FROM cart WHERE group_id = ?")
-        .bind(group_id)
-        .fetch_one(&pool).await?;
-    
-    // 从数据库返回购物车
-    let cart_title: String = row.try_get("cart_title")?;
-    Ok(cart_title)
-}
+    let mut cart_info = sqlx::query_as!
+        (CartInfo,
+        "SELECT * FROM cart WHERE group_id = ?",
+        group_id)
+        .fetch_one(&pool)
+        .await?;
 
+    // Convert the money field from String to BigDecimal
+    cart_info.money = BigDecimal::from_str(&cart_info.money).unwrap();
+
+    Ok(cart_info)
+}
 
 // CREATE TABLE cart (
 //     `id` INT PRIMARY KEY AUTO_INCREMENT,

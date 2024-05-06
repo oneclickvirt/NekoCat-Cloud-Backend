@@ -77,6 +77,7 @@ CREATE TABLE cart (
 
 CREATE TABLE invoice (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `uuid` VARCHAR(255) NOT NULL,
   `payment_id` INT NOT NULL DEFAULT 0,
   `user_id` INT NOT NULL DEFAULT 0,
   `invoice_remote` INT NOT NULL DEFAULT 0,
