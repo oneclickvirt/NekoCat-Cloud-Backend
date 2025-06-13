@@ -6,19 +6,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-http = "3.6.0"
-actix-web = "4.5.1"
-actix-session = "0.9.0"
-actix-files = "0.6.5"
-chrono = { version = "0.4", features = ["serde"] }
-log = "0.4.21"
+actix-http = "3.11.0"
+actix-web = "4.11.0"
+actix-session = "0.10.1"
+actix-files = "0.6.6"
+chrono = { version = "0.4.41", features = ["serde"] }
+log = "0.4"
 tokio = {version = "1", features=["full"] }
-sqlx = { version = "0.7", features = [ "runtime-tokio", "mysql", "chrono", "bigdecimal"] }
+sqlx = { version = "0.8", features = [ "runtime-tokio", "mysql", "chrono", "rust_decimal"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-rand = "0.8.4"
-handlebars = { version = "5.1.2", features = ["dir_source"] }
+rand = "0"
+handlebars = { version = "6.3", features = ["dir_source"] }
 dotenv = "0.15.0"
 reqwest = { version = "0.12.4", features = ["json"] }
-bigdecimal = { version = "0.4", features = ["serde"] }
-diesel = { version = "2.1.6", features = ["mysql"] }
+rust_decimal = { version = "1", features = ["serde"] }

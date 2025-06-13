@@ -107,26 +107,21 @@ pub async fn web_announcement() -> impl Responder {
 }
 
 #[get("/api/cart")]
-pub async fn web_cart(form: web::Form<CartFrom>) -> impl Responder {
-
-    let group_id: i32 = form.group_id;
-    let cart_result = cart::get_cart(group_id).await;  // 确保异步调用被正确处理
+pub async fn web_cart(query: web::Query<CartFrom>) -> impl Responder {
+    let group_id: i32 = query.group_id;
+    let cart_result = cart::get_cart(group_id).await;
 
     match cart_result {
-        Ok(cart) => {
-            HttpResponse::Ok().json(json!({
-                "status": "success",
-                "message": "Get cart success",
-                "cart": cart
-            }))
-        },
-        Err(e) => {
-            HttpResponse::Ok().json(json!({
-                "status": "error",
-                "message": "Get cart failed",
-                "debug": e.to_string()
-            }))
-        }
+        Ok(cart) => HttpResponse::Ok().json(json!({
+            "status": "success",
+            "message": "Get cart success",
+            "cart": cart
+        })),
+        Err(e) => HttpResponse::Ok().json(json!({
+            "status": "error",
+            "message": "Get cart failed",
+            "debug": e.to_string()
+        })),
     }
 }
 

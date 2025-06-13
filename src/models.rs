@@ -1,8 +1,9 @@
 use sqlx::FromRow;
 use serde::{Deserialize, Serialize};
 use chrono::NaiveDateTime;
-use bigdecimal::BigDecimal;
-#[derive(FromRow, Deserialize, Serialize, Debug, Clone)]
+use rust_decimal::Decimal;
+
+#[derive(FromRow, Deserialize, Serialize, sqlx::Type)]
 pub struct UserInfo {
     pub id: i32,
     pub username: String,
@@ -67,13 +68,13 @@ pub struct ServerInfo {
     pub created_time: NaiveDateTime,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(FromRow, Serialize, Deserialize)]
 pub struct CartInfo {
     pub id: i32,
     pub group_id: i32,
     pub cart_title: String,
     pub cart_body: String,
-    pub money: BigDecimal,
+    pub money: Decimal,
     pub stock: i32,
     pub allow_payment: String,
     pub created_time: NaiveDateTime,

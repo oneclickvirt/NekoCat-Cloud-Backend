@@ -7,7 +7,7 @@ use user::api;
 mod admin;
 use admin::admin_api;
 mod models;
-mod server;
+// mod server;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

@@ -2,11 +2,11 @@ use sqlx::mysql::MySqlPoolOptions;
 use std::env;
 use dotenv::dotenv;
 use rand::Rng;
-use rand::distributions::Alphanumeric;
+use rand::distr::Alphanumeric;
 use std::string::String;
 
 fn generate_random_string(length: usize) -> String {
-    let s: String = rand::thread_rng()
+    let s: String = rand::rng()
         .sample_iter(&Alphanumeric)
         .take(length)
         .map(char::from)
