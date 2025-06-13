@@ -376,6 +376,7 @@ dependencies = [
  "dotenv",
  "handlebars",
  "log",
+ "once_cell",
  "rand 0.9.1",
  "reqwest",
  "rust_decimal",

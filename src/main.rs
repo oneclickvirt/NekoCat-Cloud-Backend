@@ -7,11 +7,14 @@ use user::api;
 mod admin;
 use admin::admin_api;
 mod models;
+mod error;
+mod db;
 // mod server;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
+    db::init_db_pool().await.expect("Database pool init failed");
     let server_url = env::var("SERVER_URL").expect("SERVER_URLS must be set");
     HttpServer::new(move || {
         App::new()

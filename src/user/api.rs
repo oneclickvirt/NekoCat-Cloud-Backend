@@ -2,6 +2,7 @@ use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
 use serde::Deserialize;
 use serde_json::json;
 use crate::user::{login, register, announcement, cart};
+use crate::error::ApiError;
 #[derive(Deserialize)]
 pub struct LoginForm {
     pub username: String,
@@ -30,29 +31,17 @@ pub async fn web_status() -> impl Responder {
 }
 
 #[post("/api/user/login")]
-pub async fn web_login(form: web::Form<LoginForm>) -> impl Responder {
-    // 获取表单数据
+pub async fn web_login(form: web::Form<LoginForm>) -> Result<HttpResponse, ApiError> {
     let username = &form.username;
     let password = &form.password;
 
+    let user_token = login::user_login_get_token(username, password).await?;
 
-    let user_token = login::user_login_get_token(&username, &password).await;
-    // 返回成功响应
-    match user_token {
-        Ok(user_token) => {
-            HttpResponse::Ok().json(json!({
-                "status": "success",
-                "message": "Login success",
-                "token": user_token.token
-            }))
-        },
-        Err(_) => {
-            HttpResponse::Ok().json(json!({
-                "status": "error",
-                "message": "Login failed"
-            }))
-        }
-    }
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "status": "success",
+        "message": "Login success",
+        "token": user_token.token
+    })))
 }
 
 #[post("/api/user/register")]
@@ -107,22 +96,14 @@ pub async fn web_announcement() -> impl Responder {
 }
 
 #[get("/api/cart")]
-pub async fn web_cart(query: web::Query<CartFrom>) -> impl Responder {
-    let group_id: i32 = query.group_id;
-    let cart_result = cart::get_cart(group_id).await;
+pub async fn web_cart(query: web::Query<CartFrom>) -> Result<HttpResponse, ApiError> {
+    let cart = cart::get_cart(query.group_id).await?;
 
-    match cart_result {
-        Ok(cart) => HttpResponse::Ok().json(json!({
-            "status": "success",
-            "message": "Get cart success",
-            "cart": cart
-        })),
-        Err(e) => HttpResponse::Ok().json(json!({
-            "status": "error",
-            "message": "Get cart failed",
-            "debug": e.to_string()
-        })),
-    }
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "status": "success",
+        "message": "Get cart success",
+        "cart": cart
+    })))
 }
 
 #[get("/api/tool/ip")]

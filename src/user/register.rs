@@ -1,6 +1,5 @@
-use sqlx::mysql::MySqlPoolOptions;
-use std::env;
-use dotenv::dotenv;
+use crate::error::ApiError;
+use crate::db;
 use rand::Rng;
 use rand::distr::Alphanumeric;
 use std::string::String;
@@ -14,11 +13,8 @@ fn generate_random_string(length: usize) -> String {
     s
 }
 
-pub async fn register_user(username: &str, password: &str, email: &str, ip: &str) -> Result<String, sqlx::Error> {
-    dotenv().ok();
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = MySqlPoolOptions::new().connect(&database_url).await?;
-    
+pub async fn register_user(username: &str, password: &str, email: &str, ip: &str) -> Result<String, ApiError> {
+    let pool = db::get_db_pool()?;    
     let token = generate_random_string(32);
     
     let _row = sqlx::query("INSERT INTO users (username, password, email, token, last_login_ip) VALUES (?, ?, ?, ?, ?)")
@@ -27,7 +23,7 @@ pub async fn register_user(username: &str, password: &str, email: &str, ip: &str
         .bind(email)
         .bind(token.clone()) // 克隆 token
         .bind(ip)
-        .execute(&pool).await?;
+        .execute(pool).await?;
     
     Ok(token)
 }

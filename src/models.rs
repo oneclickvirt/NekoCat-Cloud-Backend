@@ -23,25 +23,26 @@ pub struct UserLogin {
     pub token: String,
 }
 
-#[derive(FromRow, Deserialize, Debug, Clone)]
-pub struct UserRegister {
-    pub id: i32,
-    pub username: String,
-    pub password: String,
-    pub email: String,
-    pub token: String,
-    pub money: f64,
-    pub aff: i32,
-    pub is_admin: i32,
-    pub created_time: NaiveDateTime,
-    pub last_login_ip: String,
-    pub last_login_time: NaiveDateTime,
-}
+// #[derive(FromRow, Deserialize, Debug, Clone)]
+// pub struct UserRegister {
+//     pub id: i32,
+//     pub username: String,
+//     pub password: String,
+//     pub email: String,
+//     pub token: String,
+//     pub money: f64,
+//     pub aff: i32,
+//     pub is_admin: i32,
+//     pub created_time: NaiveDateTime,
+//     pub last_login_ip: String,
+//     pub last_login_time: NaiveDateTime,
+// }
 
 
 #[derive(FromRow, Serialize, Deserialize, Debug, Clone)]
 pub struct Announcement {
     pub id: i32,
+    pub r#type: i32,
     pub announcement_title: String,
     pub announcement_body: String,
     pub display_portal: i32,
